@@ -6,7 +6,9 @@
   height: 40vmin;
   pointer-events: none;
 }
-
+h1 {
+  font-size: 12px;
+}
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
@@ -36,3 +38,14 @@
     transform: rotate(360deg);
   }
 }
+
+/* 
+#videoContainers {
+  position: relative;
+}
+
+#v1{
+  position: absolute;
+  width: 320px;
+    height: 360px;
+} */

@@ -5,21 +5,15 @@ import imghash from 'imghash';
 import leven from 'leven';
 import logo from './logo.svg';
 import './App.css';
-import { getVideoHash, getDiffMap } from './utils';
+import { getVideoHash } from './utils';
 
 let finalData = [];
 let hashArray = [];
-
 let hash1Video = [];
 let hash2Video = [];
-let diffMap = [];
-let gap = 0.5;
-
 let count = 0;
 var hashCoerce = hasher({sort:false, coerce:false});
-
-
-class App extends React.Component {
+class AppOld extends React.Component {
 
   constructor(props) {
     super(props);
@@ -32,28 +26,20 @@ class App extends React.Component {
         var v1 = document.getElementById('v1');
         var v2 = document.getElementById('v2');
         var canvas = document.getElementById('c');
+        canvas.width = 640;
+        canvas.height = 360;
         var context = canvas.getContext('2d');
 
-        // clean code
+        
         var back = document.createElement('canvas');
-        var backcontext = back.getContext('2d');
-
-        var cw,ch;
-        cw = v1.clientWidth;
-        ch = v1.clientHeight;
-        canvas.width = cw;
-        canvas.height = ch;
-        back.width = cw;
-        back.height = ch;
-
         var back1 = document.createElement('canvas');
         var backcontext1 = back1.getContext('2d');
         var back2 = document.createElement('canvas');
         var backcontext2 = back2.getContext('2d');
-        
+        var cw,ch;
     
-        v1.currentTime = gap;
-
+        v1.currentTime = 1;
+        //v2.currentTime = 1;
         v1.addEventListener('play', function(){
           cw = v1.clientWidth;
           ch = v1.clientHeight;
@@ -66,28 +52,68 @@ class App extends React.Component {
       
         v1.addEventListener('timeupdate', function(event){
           const time = event.srcElement.currentTime;
-          let hash = getVideoHash(v1, backcontext, cw, ch);
-          hash1Video.push(hash);
-          if (time + gap  < v1.duration)
+          
+          // console.log(time);
+          // cw = v1.clientWidth;
+          // ch = v1.clientHeight;
+          // canvas.width = cw;
+          // canvas.height = ch;
+          // back.width = cw;
+          // back.height = ch;
+          // draw(v1,v2,context,backcontext,cw,ch);
+          if (time + 1 < v1.duration)
           {
-            v1.currentTime = time + gap;
-          } else {
-            v2.currentTime = gap;
+            v2.currentTime = time;
+            //v2.currentTime = time;
+            //console.log(finalData);
+            //console.log(count);
+            //console.log(hashArray);
+            //finalData=[];
+            //hashArray=[];
+          }
+          else {
+            // console.log(finalData);
+            // console.log(count);
+            // console.log(hashArray);
+            // finalData=[];
+            // hashArray=[];
+            //v2.currentTime = 1;
           }
         },false);
   
         v2.addEventListener('timeupdate', function(event){
+
           const time = event.srcElement.currentTime;
-          let hash = getVideoHash(v2, backcontext, cw, ch);
-          hash2Video.push(hash);
-          if (time + gap < v2.duration)
+          //console.log(time);
+          cw = v2.clientWidth;
+          ch = v2.clientHeight;
+          canvas.width = cw;
+          canvas.height = ch;
+          back1.width = cw;
+          back1.height = ch;
+          back2.width = cw;
+          back2.height = ch;
+          draw(v1, v2,context,backcontext1, backcontext2,cw,ch);
+          setTimeout(() => {
+            v1.currentTime = time+1;
+          }, 100);
+          
+          if (time + 1 < v2.duration)
           {
-            v2.currentTime = time + gap;
-          } else {
-            console.log(hash1Video);
-            console.log(hash2Video);
-            diffMap = getDiffMap(hash1Video, hash2Video);
-            console.log(diffMap);
+            //v1.currentTime = time+1;
+            //console.log(finalData);
+            //console.log(count);
+            //console.log(hashArray);
+            //finalData=[];
+            //shashArray=[];
+          }
+            
+          else {
+            // console.log(finalData);
+            // console.log(count);
+            // console.log(hashArray);
+            // finalData=[];
+            // hashArray=[];
           }
         },false);
   
@@ -147,13 +173,13 @@ class App extends React.Component {
         var context = canvas.getContext('2d');
         const diff = context.createImageData(w, h);
 
-        const hash1 = imghash.hashRaw(idata1, 32);
-        const hash2 = imghash.hashRaw(idata2, 32);
+        const hash1 = imghash.hashRaw(idata1, 8);
+        const hash2 = imghash.hashRaw(idata2, 8);
         const distance = leven(hash1, hash2);
          console.log(distance);
         // console.log(hash1);
         // console.log(hash2);
-        if (distance <= 20) {
+        if (distance <= 12) {
           console.log("Images are similar");
         } else {
           console.log("Images are NOT similar");
@@ -215,4 +241,4 @@ class App extends React.Component {
 
 }
 
-export default App;
+export default AppOld;
